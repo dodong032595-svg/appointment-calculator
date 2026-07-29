@@ -99,7 +99,6 @@
       box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
     }
 
-    /* Style for percentage input suffix */
     .percent-wrapper input {
       padding-right: 32px;
     }
@@ -152,7 +151,7 @@
   <div class="calculator-card">
     <div class="header">
       <h2>Appointment Calculator</h2>
-      <p>Estimate your monthly & daily targets</p>
+      <p>Estimate your monthly, weekly & daily targets</p>
     </div>
 
     <div class="form-container">
@@ -179,6 +178,10 @@
           <span id="monthlyNeeded" class="result-value"></span>
         </div>
         <div class="result-card">
+          <span class="result-label">Weekly Appointments</span>
+          <span id="weeklyNeeded" class="result-value"></span>
+        </div>
+        <div class="result-card">
           <span class="result-label">Daily Appointments</span>
           <span id="dailyNeeded" class="result-value"></span>
         </div>
@@ -193,11 +196,13 @@
       const workingDaysVal = document.getElementById('workingDays').value;
 
       const monthlySpan = document.getElementById('monthlyNeeded');
+      const weeklySpan = document.getElementById('weeklyNeeded');
       const dailySpan = document.getElementById('dailyNeeded');
 
-      // Clear output fields if any field is empty
+      // Clear output fields if any required input field is empty
       if (!showTargetVal || !showRateVal || !workingDaysVal) {
         monthlySpan.innerText = "";
+        weeklySpan.innerText = "";
         dailySpan.innerText = "";
         return;
       }
@@ -220,8 +225,12 @@
         dailyNeeded = Math.ceil(monthlyNeeded / workingDays);
       }
 
-      // Display rounded up values
+      // 3. Calculate Weekly Appointment Needed (Daily * 5)
+      let weeklyNeeded = dailyNeeded * 5;
+
+      // Display results
       monthlySpan.innerText = monthlyNeeded;
+      weeklySpan.innerText = weeklyNeeded;
       dailySpan.innerText = dailyNeeded;
     }
   </script>
