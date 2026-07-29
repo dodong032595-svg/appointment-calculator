@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appointment Calculator</title>
+  <style>
+    :root {
+      --bg-color: #f4f5f7;
+      --card-bg: #ffffff;
+      --primary-black: #111827;
+      --accent-orange: #f97316;
+      --accent-orange-hover: #ea580c;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .calculator-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 420px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .header {
+      background-color: var(--primary-black);
+      color: #ffffff;
+      padding: 24px 28px;
+      border-bottom: 4px solid var(--accent-orange);
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header p {
+      margin: 4px 0 0 0;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+
+    .form-container {
+      padding: 28px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-black);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      color: var(--primary-black);
+      background-color: #fafafa;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.2s ease-in-out;
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      background-color: #ffffff;
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+    }
+
+    /* Style for percentage input suffix */
+    .percent-wrapper input {
+      padding-right: 32px;
+    }
+
+    .percent-wrapper::after {
+      content: "%";
+      position: absolute;
+      right: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+      pointer-events: none;
+    }
+
+    .results-container {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 2px dashed var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .result-card {
+      background-color: #fffaf7;
+      border: 1px solid #ffedd5;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .result-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--accent-orange);
+      min-height: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator-card">
+    <div class="header">
+      <h2>Appointment Calculator</h2>
+      <p>Estimate your monthly & daily targets</p>
+    </div>
+
+    <div class="form-container">
+      <div class="input-group">
+        <label for="showTarget">Show Target (Count)</label>
+        <input type="number" id="showTarget" placeholder="e.g. 50" oninput="calculate()">
+      </div>
+
+      <div class="input-group">
+        <label for="showRate">Show Rate</label>
+        <div class="input-wrapper percent-wrapper">
+          <input type="number" id="showRate" placeholder="e.g. 80" oninput="calculate()">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="workingDays">Working Days</label>
+        <input type="number" id="workingDays" placeholder="e.g. 20" oninput="calculate()">
+      </div>
+
+      <div class="results-container">
+        <div class="result-card">
+          <span class="result-label">Monthly Appointments</span>
+          <span id="monthlyNeeded" class="result-value"></span>
+        </div>
+        <div class="result-card">
+          <span class="result-label">Daily Appointments</span>
+          <span id="dailyNeeded" class="result-value"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const showTargetVal = document.getElementById('showTarget').value;
+      const showRateVal = document.getElementById('showRate').value;
+      const workingDaysVal = document.getElementById('workingDays').value;
+
+      const monthlySpan = document.getElementById('monthlyNeeded');
+      const dailySpan = document.getElementById('dailyNeeded');
+
+      // Clear output fields if any field is empty
+      if (!showTargetVal || !showRateVal || !workingDaysVal) {
+        monthlySpan.innerText = "";
+        dailySpan.innerText = "";
+        return;
+      }
+
+      const showTarget = parseFloat(showTargetVal);
+      const showRate = parseFloat(showRateVal);
+      const workingDays = parseFloat(workingDaysVal);
+
+      const showRateDecimal = showRate / 100;
+
+      // 1. Calculate Monthly Appointment Schedule Needed (Rounded UP)
+      let monthlyNeeded = 0;
+      if (showRateDecimal > 0) {
+        monthlyNeeded = Math.ceil(showTarget / showRateDecimal);
+      }
+
+      // 2. Calculate Daily Appointment Needed (Rounded UP)
+      let dailyNeeded = 0;
+      if (workingDays > 0) {
+        dailyNeeded = Math.ceil(monthlyNeeded / workingDays);
+      }
+
+      // Display rounded up values
+      monthlySpan.innerText = monthlyNeeded;
+      dailySpan.innerText = dailyNeeded;
+    }
+  </script>
+
+</body>
+</html>
