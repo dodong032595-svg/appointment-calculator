@@ -113,6 +113,25 @@
       pointer-events: none;
     }
 
+    .clear-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background-color: #f3f4f6;
+      color: var(--primary-black);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .clear-btn:hover {
+      background-color: #e5e7eb;
+      border-color: #d1d5db;
+    }
+
     .results-container {
       margin-top: 24px;
       padding-top: 20px;
@@ -171,6 +190,8 @@
         <label for="workingDays">Working Days</label>
         <input type="number" id="workingDays" placeholder="e.g. 20" oninput="calculate()">
       </div>
+
+      <button type="button" class="clear-btn" onclick="clearFields()">Clear Fields</button>
 
       <div class="results-container">
         <div class="result-card">
@@ -232,6 +253,16 @@
       monthlySpan.innerText = monthlyNeeded;
       weeklySpan.innerText = weeklyNeeded;
       dailySpan.innerText = dailyNeeded;
+    }
+
+    function clearFields() {
+      document.getElementById('showTarget').value = "";
+      document.getElementById('showRate').value = "";
+      document.getElementById('workingDays').value = "";
+      
+      document.getElementById('monthlyNeeded').innerText = "";
+      document.getElementById('weeklyNeeded').innerText = "";
+      document.getElementById('dailyNeeded').innerText = "";
     }
   </script>
 
