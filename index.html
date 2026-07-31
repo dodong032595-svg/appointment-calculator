@@ -240,14 +240,14 @@
         monthlyNeeded = Math.ceil(showTarget / showRateDecimal);
       }
 
-      // 2. Calculate Daily Appointment Needed (Rounded UP)
+      // 2. Calculate Weekly Appointment Needed (Monthly / 4, Rounded UP)
+      let weeklyNeeded = Math.ceil(monthlyNeeded / 4);
+
+      // 3. Calculate Daily Appointment Needed (Rounded UP)
       let dailyNeeded = 0;
       if (workingDays > 0) {
         dailyNeeded = Math.ceil(monthlyNeeded / workingDays);
       }
-
-      // 3. Calculate Weekly Appointment Needed (Daily * 5)
-      let weeklyNeeded = dailyNeeded * 5;
 
       // Display results
       monthlySpan.innerText = monthlyNeeded;
